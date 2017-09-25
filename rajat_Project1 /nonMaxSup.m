@@ -13,22 +13,18 @@ function M = nonMaxSup(Mag, Ori)
 %set up meshgrid
 [x,y] = meshgrid(1:W,1:H);
 
-%constant value to thin edges further 
-magnitude = 0.2;
-
 %Get the pixel coordinates in the positive and negative directions 
-x_positive = x + cos(Ori).*magnitude;
-y_positive = y + sin(Ori).*magnitude;
+x_positive = x + cos(Ori);
+y_positive = y + sin(Ori);
 
-x_negative = x - cos(Ori).*magnitude; 
-y_negative = y - sin(Ori).*magnitude;
+x_negative = x - cos(Ori); 
+y_negative = y - sin(Ori);
 
 %Get the interpolated pixel intensities for virtual pixels 
 VqPositive = interp2(x,y,Mag,x_positive,y_positive);
 VqNegative = interp2(x,y,Mag,x_negative,y_negative);
 
-M(:,:) = Mag(:,:);
-M((VqPositive > Mag) | (VqNegative > Mag)) = 0;
-M = M > 10;
+M = zeros(H,W); 
+M((VqPositive < Mag) & (VqNegative < Mag)) = 1;
 
 end

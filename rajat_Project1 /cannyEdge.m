@@ -8,7 +8,7 @@
 %        E = (H, W), logic matrix, the edge detection result.
 %
 
-
+close all;
 %% Convert the color image to gray scale image
 I_gray = rgb2gray(I);
 

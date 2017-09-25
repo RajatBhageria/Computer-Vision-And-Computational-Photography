@@ -10,19 +10,15 @@ function E = edgeLink(M, Mag, Ori)
 %        E = (H, W), logic matrix, the edge detection result.
 %
 %% ****YOU CODE STARTS HERE**** 
-
-k_low = 10; 
-k_high = 20; 
-
 [H,W] = size(Mag);
 
-%% Hysteresis 
-% for weak edge
-threshold_low = M > k_low
-% for strong edge
-threshold_high = M > k_high
+k_low = 0.035; 
+k_high = 0.07; 
 
-%E = zeros(H, W);
+% for weak edge
+threshold_low = k_low * M; 
+% for strong edge
+threshold_high = k_high * M; 
 
 
 end
