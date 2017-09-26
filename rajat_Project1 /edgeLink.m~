@@ -20,7 +20,7 @@ k_low = 3.75;
 k_high = 2.5 * k_low; 
 
 high = J >= k_high;
-halves = ((J >= k_low) & (J < k_high)).*.5;
+halves = ((J > k_low) & (J < k_high)).*.5;
 high_low = high + halves;
 
 %% Descretize 

@@ -16,7 +16,6 @@ function M = nonMaxSup(Mag, Ori)
 %Get the pixel coordinates in the positive and negative directions 
 x_positive = x + cos(Ori);
 y_positive = y + sin(Ori);
-
 x_negative = x - cos(Ori); 
 y_negative = y - sin(Ori);
 
@@ -24,7 +23,10 @@ y_negative = y - sin(Ori);
 VqPositive = interp2(x,y,Mag,x_positive,y_positive);
 VqNegative = interp2(x,y,Mag,x_negative,y_negative);
 
+%create the final M matrix by setting all the points where the pixel is 
+%greater than the pixels in the positive and negative orientations 
+%equal to 1. 
 M = zeros(H,W); 
-M((VqPositive < Mag) & (VqNegative < Mag)) = 1;
+M((VqPositive <= Mag) & (VqNegative <= Mag)) = 1;
 
 end

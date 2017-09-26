@@ -10,8 +10,11 @@
 
 close all;
 %% Convert the color image to gray scale image
-I_gray = rgb2gray(I);
-
+if (size(I, 3) == 1)
+    I_gray = I;
+else
+    I_gray = rgb2gray(I);
+end
 
 %% Compute magnitutde and orientation of derivatives
 %% **TODO: finish the findDerivative function
