@@ -6,7 +6,7 @@
 pass = true;
 
 %% Canny Edge Test
-I = imread('train_images_P1/161062.jpg');
+I = imread('canny_dataset/3096.jpg');
 
 E = cannyEdge(I);
 

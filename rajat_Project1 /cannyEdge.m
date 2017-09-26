@@ -21,7 +21,6 @@ end
 [Mag, Magx, Magy, Ori] = findDerivatives(I_gray);
 visDerivatives(I_gray, Mag, Magx, Magy);
 
-
 %% Detect local maximum
 %% **TODO: finish the nonMaxSup function
 M = nonMaxSup(Mag, Ori);
