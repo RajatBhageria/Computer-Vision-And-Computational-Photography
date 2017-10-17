@@ -1,0 +1,12 @@
+function indexes = getIndexes(mask, targetH, targetW, offsetX, offsetY)
+%% Enter Your Code Here
+    resizedImage = imresize(mask, [targetH targetW]);
+   
+    %add the x offset 
+    translatedImage = imtranslate(resizedImage, [offsetX, offsetY]);
+    
+    %index
+    [n,m] = size(tra
+    for i
+    indexes = sub2ind(size(translatedImage), 
+end

@@ -63,7 +63,7 @@ for j=1:4
     
     % if image type is double, modify the following line accordingly if necessary
     for i=1:11
-        imagesc(img_morphed{i});
+        %imagesc(img_morphed{i});
         axis image; axis off;drawnow;
         try
             % VideoWriter based video creation

@@ -12,7 +12,7 @@ function [morphed_im] = morph_tri(im1, im2, im1_pts, im2_pts, warp_frac, dissolv
 [n,m,~] = size(im2);
 [x,y] = meshgrid(1:n, 1:m);
 imageCoordinates=[x(:),y(:)]; %all the pixels in the image
-morphed_im=[];%=zeros(n,m,3,size(warp_frac,1)); %end result 
+morphed_im=[]; %end result 
 
 for frame = 1:size(warp_frac,1)
     weight = warp_frac(frame);
@@ -57,7 +57,7 @@ for frame = 1:size(warp_frac,1)
         img1Points = im1_pts(triangle,:)';  
         img1Matrix = [img1Points;[1,1,1]];
         coordinatesInIm1 = img1Matrix*barycentric;
-        coordinatesInIm1 = round(coordinatesInIm1);
+        %coordinatesInIm1 = round(coordinatesInIm1);
         xs1 = coordinatesInIm1(1,:)';
         ys1 = coordinatesInIm1(2,:)';
         
@@ -65,7 +65,7 @@ for frame = 1:size(warp_frac,1)
         img2Points = im2_pts(triangle,:)';  
         img2Matrix = [img2Points;[1,1,1]];
         coordinatesInIm2 = img2Matrix*barycentric;
-        coordinatesInIm2 = round(coordinatesInIm2);
+        %coordinatesInIm2 = round(coordinatesInIm2);
         xs2 = coordinatesInIm2(1,:)';
         ys2 = coordinatesInIm2(2,:)';
         
@@ -75,9 +75,13 @@ for frame = 1:size(warp_frac,1)
         xs2(xs2<1) = 1;
         ys2(ys2<1) = 1;
         
+        numberOfChannels = size(im1,3);
         %put the coordinates in for the two new warped images
-        im1Warped(xs1,ys1,1:3) = im1(x(inTriangle),y(inTriangle),1:3);
-        im2Warped(xs2,ys2,1:3) = im2(x(inTriangle),y(inTriangle),1:3);
+        for channel = 1:numberOfChannels
+%            Vq = interp2(x(inTriangle),y(inTriangle),im1Warped,xs1,ys1);
+            im1Warped(xs1,ys1,channel) = im1(x(inTriangle),y(inTriangle),channel);
+            im2Warped(xs2,ys2,channel) = im2(x(inTriangle),y(inTriangle),channel);
+        end
     end
         
     %do the cross dissolve 
