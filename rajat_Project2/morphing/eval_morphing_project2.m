@@ -1,5 +1,5 @@
 %% INITIALIZE
-do_trig = 0;
+do_trig =1;
 img = (imread('project2_testimg.png'));
 
 % Control points

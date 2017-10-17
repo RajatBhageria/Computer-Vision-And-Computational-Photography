@@ -6,30 +6,27 @@ function [morphed_im] = morph_tri(im1, im2, im1_pts, im2_pts, warp_frac, dissolv
 %	Input im2_pts: correspondences coordiantes in the source image
 %	Input warp_frac: a vector contains warping parameters
 %	Input dissolve_frac: a vector contains cross dissolve parameters
-% 
 %	Output morphed_im: a set of morphed images obtained from different warp and dissolve parameters
-% Helpful functions: delaunay, tsear`chn
+% Helpful functions: delaunay, tsearchn
 
-[n,m] = size(im2);
-[x,y]=meshgrid(1:n, 1:m);
+[n,m,~] = size(im2);
+[x,y] = meshgrid(1:n, 1:m);
 imageCoordinates=[x(:),y(:)]; %all the pixels in the image
-
-morphed_im=[]; %end result 
+morphed_im=zeros(n,m,3,size(warp_frac,1)); %end result 
 
 for frame = 1:size(warp_frac,1)
-    time = warp_frac(frame);
+    weight = warp_frac(frame);
     
     %Find average shape! 
-    avg = (1-time)*im1_pts + time*im2_pts;
+    avg = (1-weight)*im2_pts + weight*im1_pts;
     
     %Find triangulation of average shape
     TRI = delaunay(avg);
     
-    %see what triangle each pixel is in the result image 
+    %see what triangle each pixel is in the result image
     t = tsearchn(avg,TRI,imageCoordinates);
-    
-    im1Warped = []; %before cross dissolve
-    im2Warped = []; %before cross dissolve 
+    im1Warped = zeros(n,m,3); %before cross dissolve
+    im2Warped = zeros(n,m,3); %before cross dissolve 
 
     %loop over num triangles 
     [numTriangles,~] = size(TRI);
@@ -42,11 +39,15 @@ for frame = 1:size(warp_frac,1)
         %of triangle 
         matrix = [avgPoints;[1,1,1]];
         
-        %find the pixels in the source image that are in triangle i 
+        %find the pixels in the average image that are in triangle i 
         inTriangle = find(t==i);
+        
+        %find the number of pixels in the triangle 
+        numPixels = size(inTriangle,1); 
+        
         %make a matrix with x,y cooridinates of the pixels in triangle i
         %with ones attached as well 
-        verticesInsideTriangle = [x(inTriangle),y(inTriangle),ones(size(inTriangle,1),1)]';
+        verticesInsideTriangle = [x(inTriangle),y(inTriangle),ones(numPixels,1)]';
         
         %these are the barycentric coordinates of all the pixels inside the
         %triangle
@@ -67,20 +68,22 @@ for frame = 1:size(warp_frac,1)
         coordinatesInIm2 = round(coordinatesInIm2);
         xs2 = coordinatesInIm2(1,:)';
         ys2 = coordinatesInIm2(2,:)';
-        for rgb = 
-            im1Warped(xs1,ys1,1:3) = im1(x(inTriangle),y(inTriangle),1:3);
-            im2Warped(xs2,ys2,1:3) = im2(x(inTriangle),y(inTriangle),1:3);
-        end
+        
+        %take care of any coordinates less than 1 
+        xs1(xs1<1) = 1;
+        ys1(ys1<1) = 1;
+        xs2(xs2<1) = 1;
+        ys2(ys2<1) = 1;
+        
+        %put the coordinates in for the two new warped images
+        im1Warped(xs1,ys1,1:3) = im1(x(inTriangle),y(inTriangle),1:3);
+        im2Warped(xs2,ys2,1:3) = im2(x(inTriangle),y(inTriangle),1:3);
     end
-
-    
+        
     %do the cross dissolve 
     dissolveFrac = dissolve_frac(frame);
-    finalImage = (1-dissolveFrac)*im1Warped + dissolveFrac * im2Warped;
-    
-    morphed_im = [morphed_im;finalImage];
+    finalImage = (1-dissolveFrac)*im2Warped + dissolveFrac * im1Warped;
+    morphed_im = cat(4,morphed_im,finalImage);
 end
 
 end
-
-
