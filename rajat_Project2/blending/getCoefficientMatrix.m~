@@ -1,0 +1,44 @@
+function coeffA = getCoefficientMatrix(indexes)
+%% Enter Your Code Here
+n = size(find((indexes > 0)==1),1); %number of replacement pixels 
+
+coeffA = eye(n,n);
+%make all the items along diagonal = 4 
+coeffA = 4*coeffA;
+
+for index=1:n
+    
+    %calculate all the linear indexes of the pixels right next to index 
+    try
+        %left and right 
+        leftIndex = index-1; 
+        rightIndex = index+1;
+        
+        %find up and down indexes 
+        [row,col] = find(coeffA == index);
+        upIndex = coeffA(row-1,col);
+        downIndex = coeffA(row+1,col); 
+    catch 
+        leftIndex= 0; 
+        rightIndex=0;
+       
+    end 
+
+    
+    %assign -1s to the left, right, up and down indexes
+    if (leftIndex > 0)
+        coeffA(index,leftIndex) = -1;
+    end
+    if (rightIndex > 0)
+        coeffA(index,rightIndex) = -1;
+    end
+    if (upIndex > 0)
+        coeffA(index,upIndex) = -1;
+    end
+    if (downIndex > 0)
+        coeffA(index,upIndex) = -1;
+    end
+    
+end 
+   
+end
