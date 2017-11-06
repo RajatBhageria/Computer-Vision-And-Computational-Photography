@@ -1,0 +1,7 @@
+Note that the video is made in gif format. To view this, you may have to view in a browser like Chrome or Safari. 
+
+The GIF allows different size frames. 
+
+However, the GIF was perhaps not a great format too since the image is being distorted and stretched because there is no zero padding even though the image is getting smaller. 
+
+This problem would not have existed if we had added zero paddding when we removed pizels from a row or column. 
