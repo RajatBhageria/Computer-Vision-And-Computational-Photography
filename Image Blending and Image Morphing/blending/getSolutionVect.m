@@ -12,15 +12,16 @@ function solVectorb = getSolutionVect(indexes, source, target, offsetX, offsetY)
     solVectorb = zeros(replacementPixels,1); 
 
     for row = 1:n
-        for col = 1:m 
+        for col = 1:m-1 
             index = indexes(row,col); 
             %make sure that we're only taking convolution values for indexes >0
             %i.e., they are within omega mask. 
             if (index ~=0) 
                 %get the convolved value of pixel row, col in the source image
-                convolvedVal = convolved(row-offsetY, col-offsetX); %remember that along rows you you're going along y! 
-                bVal = convolvedVal;
-
+                if (row-offsetY > 0 && col-offsetX > 0)
+                    convolvedVal = convolved(row-offsetY, col-offsetX); %remember that along rows you you're going along y! 
+                    bVal = convolvedVal;
+                end
                 %find all the boundaries on the target image 
                 %check the left pixel
                 if (row -1 > 0 && indexes(row-1,col)==0)

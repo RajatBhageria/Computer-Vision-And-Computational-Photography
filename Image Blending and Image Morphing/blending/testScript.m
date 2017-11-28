@@ -1,13 +1,14 @@
 %load the source and the target images 
-sourceImg = imread('coffee.jpeg'); 
-targetImg = imread('computer.jpeg');
+sourceImg = imread('SourceImage.jpg'); 
+targetImg = imread('TargetImage.jpg');
+sourceImg = imresize(sourceImg, 0.35); 
 
 %find the mask of the image 
 mask = maskImage (sourceImg); 
 
 %set any offsets
-offsetX = -20; 
-offsetY = 0; 
+offsetX = 250; 
+offsetY = 180; 
 
 %%final image
 resultImg = seamlessCloningPoisson(sourceImg, targetImg, mask, offsetX, offsetY);
